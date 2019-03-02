@@ -8,7 +8,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+
+
 io.on('connection', socket => {
+console.log(process.env.TEST)
     console.log('a user connected', socket.id);
 
     socket.on('chat message', function(msg) {
