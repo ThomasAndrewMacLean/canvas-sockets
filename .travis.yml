@@ -1,12 +1,12 @@
-language: node_js
-node_js:
-- node
-cache:
-  directories:
-  - node_modules
-script: yarn install
-before_deploy: yarn add now --no-save
-deploy:
-- provider: script
-  script: now --public && now alias
-  skip_cleanup: true
+# language: node_js
+# node_js:
+# - node
+# cache:
+#   directories:
+#   - node_modules
+# script: yarn install
+# before_deploy: yarn add now --no-save
+# deploy:
+# - provider: script
+#   script: now --public && now alias
+#   skip_cleanup: true
