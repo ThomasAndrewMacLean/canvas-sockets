@@ -8,5 +8,5 @@ script: yarn install
 before_deploy: yarn add now --no-save
 deploy:
     - provider: script
-      script: now --public && now alias
+      script: now --public --token $NOW_TOKEN && now alias --token $NOW_TOKEN
       skip_cleanup: true
