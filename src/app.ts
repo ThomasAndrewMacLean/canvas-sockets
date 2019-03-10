@@ -4,14 +4,14 @@ const app = express();
 const http = require('http').Server(app);
 const io = socket(http);
 
+app.use(express.static('src/public'));
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-
-
-io.on('connection', socket => {
-console.log(process.env.TEST)
+io.on('connection', (socket) => {
+    console.log(process.env.TEST);
     console.log('a user connected', socket.id);
 
     socket.on('chat message', function(msg) {
