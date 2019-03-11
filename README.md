@@ -23,3 +23,5 @@ https://getmdl.io
 
 https://developers.google.com/web/fundamentals/media/capturing-images/
 https://www.html5rocks.com/en/tutorials/getusermedia/intro/
+
+https://medium.freecodecamp.org/how-to-set-up-simple-image-upload-with-node-and-aws-s3-84e609248792

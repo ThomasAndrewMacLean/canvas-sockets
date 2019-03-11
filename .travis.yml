@@ -8,5 +8,5 @@ script: yarn install
 before_deploy: yarn add now --no-save
 deploy:
     - provider: script
-      script: now --public --token $NOW_TOKEN && now alias --token $NOW_TOKEN
+      script: now --public --token $NOW_TOKEN -e SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY -e ACCESS_KEY_ID=$ACCESS_KEY_ID && now alias --token $NOW_TOKEN
       skip_cleanup: true

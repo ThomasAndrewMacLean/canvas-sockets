@@ -1,15 +1,64 @@
 import express = require('express');
+require('dotenv').config();
 import socket = require('socket.io');
 const app = express();
 const http = require('http').Server(app);
 const io = socket(http);
 
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+
+aws.config.update({
+    // Your SECRET ACCESS KEY from AWS should go here,
+    // Never share it!
+    // Setup Env Variable, e.g: process.env.SECRET_ACCESS_KEY
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    // Not working key, Your ACCESS KEY ID from AWS should go here,
+    // Never share it!
+    // Setup Env Variable, e.g: process.env.ACCESS_KEY_ID
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    region: 'eu-west-1', // region of your bucket
+});
+
+const s3 = new aws.S3();
+const upload = multer({
+    storage: multerS3({
+        s3,
+        bucket: 'canvas-sockets',
+        acl: 'public-read',
+        metadata(req, file, cb) {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key(req, file, cb) {
+            cb(null, Date.now().toString());
+        },
+    }),
+});
+
+// module.exports = upload;
 app.use(express.static('src/public'));
 
-app.get('/', (req, res) => {
+app.get('/:id', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+const singleUpload = upload.single('image');
+console.log(process.env.HELLO);
+app.post('/image-upload/:id', (req, res) => {
+    singleUpload(req, res, (err, some) => {
+        if (err) {
+            return res.status(422).send({
+                errors: [{ title: 'Image Upload Error', detail: err.message }],
+            });
+        }
+        return res.json({ imageUrl: req.file.location });
+    });
+});
+
+app.post('/test/:id', (req, res) => {
+    return res.json({ test: req.params.id });
+});
 io.on('connection', (socket) => {
     console.log(process.env.TEST);
     console.log('a user connected', socket.id);
