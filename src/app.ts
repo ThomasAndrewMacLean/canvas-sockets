@@ -27,10 +27,10 @@ const upload = multer({
         s3,
         bucket: 'canvas-sockets',
         acl: 'public-read',
-        metadata(req, file, cb) {
+        metadata(req: any, file: any, cb: any) {
             cb(null, { fieldName: file.fieldname });
         },
-        key(req, file, cb) {
+        key(req: any, file: any, cb: any) {
             cb(null, Date.now().toString());
         },
     }),
@@ -44,26 +44,25 @@ app.get('/:id', (req, res) => {
 });
 
 const singleUpload = upload.single('image');
-console.log(process.env.HELLO);
+
 app.post('/image-upload/:id', (req, res) => {
-    singleUpload(req, res, (err, some) => {
+    singleUpload(req, res, (err: any) => {
         if (err) {
             return res.status(422).send({
                 errors: [{ title: 'Image Upload Error', detail: err.message }],
             });
         }
-        return res.json({ imageUrl: req.file.location });
+        return res.json({ imageUrl: 'req.file.location' });
     });
 });
 
 app.post('/test/:id', (req, res) => {
     return res.json({ test: req.params.id });
 });
-io.on('connection', (socket) => {
-    console.log(process.env.TEST);
+io.on('connection', (socket: any) => {
     console.log('a user connected', socket.id);
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', function(msg: any) {
         console.log('message: ' + msg);
         io.emit('chat message', msg);
     });
