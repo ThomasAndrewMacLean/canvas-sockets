@@ -36,6 +36,17 @@ const upload = multer({
     }),
 });
 
+const dynamodb = new AWS.DynamoDB();
+const params = {
+    TableName: 'canvas-sockets',
+    Item: {
+        email: { S: 'jon@doe.com' },
+        fullname: { S: 'Jon Doe' },
+    },
+};
+
+dynamodb.putItem(params, callback);
+
 // module.exports = upload;
 app.use(express.static('src/public'));
 
