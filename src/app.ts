@@ -1,51 +1,56 @@
-import express = require('express');
+// tslint:disable-next-line:no-var-requires
 require('dotenv').config();
+import express = require('express');
 import socket = require('socket.io');
 const app = express();
+// tslint:disable-next-line:no-var-requires
 const http = require('http').Server(app);
 const io = socket(http);
 
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
+import aws = require('aws-sdk');
+import { AWSError } from 'aws-sdk';
+import multer = require('multer');
+import multerS3 = require('multer-s3');
 
 aws.config.update({
-    // Your SECRET ACCESS KEY from AWS should go here,
-    // Never share it!
-    // Setup Env Variable, e.g: process.env.SECRET_ACCESS_KEY
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    // Not working key, Your ACCESS KEY ID from AWS should go here,
-    // Never share it!
-    // Setup Env Variable, e.g: process.env.ACCESS_KEY_ID
     accessKeyId: process.env.ACCESS_KEY_ID,
-    region: 'eu-west-1', // region of your bucket
+    region: 'eu-west-1',
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
 });
 
 const s3 = new aws.S3();
 const upload = multer({
     storage: multerS3({
-        s3,
-        bucket: 'canvas-sockets',
         acl: 'public-read',
+        bucket: 'canvas-sockets',
         metadata(req: any, file: any, cb: any) {
             cb(null, { fieldName: file.fieldname });
         },
         key(req: any, file: any, cb: any) {
             cb(null, Date.now().toString());
         },
+        s3,
     }),
 });
 
 const dynamodb = new aws.DynamoDB();
 const params = {
-    TableName: 'canvas-sockets',
     Item: {
         email: { S: 'jon@doe.com' },
         fullname: { S: 'Jon Doe' },
+        id: { S: '1' },
     },
+    TableName: 'canvas-sockets',
 };
 
-dynamodb.putItem(params);
+dynamodb.putItem(params, (err: AWSError, data) => {
+    if (err) {
+        // tslint:disable-next-line:no-console
+        console.log(err);
+    }
+    // tslint:disable-next-line:no-console
+    console.log(data);
+});
 
 // module.exports = upload;
 app.use(express.static('src/public'));
@@ -68,20 +73,21 @@ app.post('/image-upload/:id', (req, res) => {
 });
 
 app.post('/test/:id', (req, res) => {
+    io.emit('chat message', req.params.id);
     return res.json({ test: req.params.id });
 });
-io.on('connection', (socket: any) => {
-    console.log('a user connected', socket.id);
+io.on('connection', (socketIO: any) => {
+    console.log('a user connected', socketIO.id);
 
-    socket.on('chat message', function(msg: any) {
+    socketIO.on('chat message', (msg: any) => {
         console.log('message: ' + msg);
         io.emit('chat message', msg);
     });
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected', socket.id);
+    socketIO.on('disconnect', () => {
+        console.log('user disconnected', socketIO.id);
     });
 });
-http.listen(3000, function() {
+http.listen(3000, () => {
     console.log('listening on *:3000');
 });
