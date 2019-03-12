@@ -68,6 +68,7 @@ app.post('/image-upload/:id', (req, res) => {
                 errors: [{ title: 'Image Upload Error', detail: err.message }],
             });
         }
+        // @ts-ignore
         return res.json({ imageUrl: req.file.location });
     });
 });
