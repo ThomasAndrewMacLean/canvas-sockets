@@ -12,6 +12,8 @@ import { AWSError } from 'aws-sdk';
 import multer = require('multer');
 import multerS3 = require('multer-s3');
 
+import uuidv4 = require('uuid/v4');
+
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     region: 'eu-west-1',
@@ -34,31 +36,35 @@ const upload = multer({
 });
 
 const dynamodb = new aws.DynamoDB();
-const params = {
-    Item: {
-        email: { S: 'jon@doe.com' },
-        fullname: { S: 'Jon Doe' },
-        id: { S: '1' },
-    },
-    TableName: 'canvas-sockets',
-};
 
-dynamodb.putItem(params, (err: AWSError, data) => {
-    if (err) {
-        // tslint:disable-next-line:no-console
-        console.log(err);
-    }
-    // tslint:disable-next-line:no-console
-    console.log(data);
-});
+const saveItem = (imageUrl: string, slug: string) => {
+    const params = {
+        Item: {
+            id: { S: uuidv4() },
+            imageUrl: { S: imageUrl },
+            slug: { S: slug },
+        },
+        TableName: 'canvas-sockets',
+    };
+
+    dynamodb.putItem(params, (err: AWSError, data) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log(data);
+    });
+};
 
 // module.exports = upload;
 app.use(express.static('src/public'));
 
 app.get('/:id', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/start.html');
+});
 const singleUpload = upload.single('image');
 
 app.post('/image-upload/:id', (req, res) => {
@@ -69,7 +75,12 @@ app.post('/image-upload/:id', (req, res) => {
             });
         }
         // @ts-ignore
-        return res.json({ imageUrl: req.file.location });
+        const imageUrl = req.file.location;
+
+        io.emit('imageUrl', imageUrl);
+
+        saveItem(imageUrl, req.params.id);
+        return res.json({ imageUrl });
     });
 });
 
