@@ -46,6 +46,10 @@ set usernames IO
 
 https://stackoverflow.com/questions/32657379/how-i-can-get-a-socket-username-socket-io
 
+resize image size
+
+https://stackoverflow.com/questions/2434458/image-resizing-client-side-with-javascript-before-upload-to-the-server
+
 ## TODO:
 - [x] create start page
 - [ ] style start page, add info
@@ -72,3 +76,4 @@ https://stackoverflow.com/questions/32657379/how-i-can-get-a-socket-username-soc
 - [ ] setup colours for players 
 - [ ] show connected players
 - [ ] show user is typing
+- [ ] resize image client side before uploading
