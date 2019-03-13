@@ -49,6 +49,11 @@ https://stackoverflow.com/questions/32657379/how-i-can-get-a-socket-username-soc
 ## TODO:
 - [x] create start page
 - [ ] style start page, add info
+- [ ] add svg squiggle effect on hover
+- [ ] setup pug for templating engine
+- [ ] set typescript for client side js
+- [ ] style krswrdrsl page (background image if no photo)
+- [ ] whatsapp share button (header image...)
 - [ ] set name to chat (home page, save local storage) and colour 
 - [ ] create random id as slug and navigate to that page (create endpoint? get randow uuid?)
 - [ ] create save kruiswoordpage button, and list these on start page
@@ -66,3 +71,4 @@ https://stackoverflow.com/questions/32657379/how-i-can-get-a-socket-username-soc
 - [ ] remove after x seconds
 - [ ] setup colours for players 
 - [ ] show connected players
+- [ ] show user is typing
