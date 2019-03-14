@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/ThomasAndrewMacLean/canvas-sockets.svg?branch=master)](https://travis-ci.org/ThomasAndrewMacLean/canvas-sockets)
-
 ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m782073559-a2961130aac07a368ce6061b.svg)
 
 # canvas-sockets
