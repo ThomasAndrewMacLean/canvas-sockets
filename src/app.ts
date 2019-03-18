@@ -58,7 +58,7 @@ const saveItem = (imageUrl: string, slug: string) => {
 // module.exports = upload;
 app.use(express.static('src/public'));
 
-app.post("testing", (req, res )=> {
+app.post('/testing', (req, res )=> {
     return res.status(200).json(process.env.TEST)
 })
 
