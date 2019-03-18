@@ -13,6 +13,8 @@ import multer = require('multer');
 import multerS3 = require('multer-s3');
 
 import uuidv4 = require('uuid/v4');
+const s3 = new aws.S3();
+const dynamodb = new aws.DynamoDB();
 
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
@@ -20,7 +22,6 @@ aws.config.update({
     secretAccessKey: process.env.SECRET_ACCESS_KEY,
 });
 
-const s3 = new aws.S3();
 const upload = multer({
     storage: multerS3({
         acl: 'public-read',
@@ -35,7 +36,6 @@ const upload = multer({
     }),
 });
 
-const dynamodb = new aws.DynamoDB();
 
 const saveItem = (imageUrl: string, slug: string) => {
     const params = {
@@ -58,13 +58,18 @@ const saveItem = (imageUrl: string, slug: string) => {
 // module.exports = upload;
 app.use(express.static('src/public'));
 
-app.get('/:id', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
-});
+app.get('/uuid', (req,res)=> {
+    return res.status(200).json(uuidv4())
+})
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/start.html');
 });
+
+app.get('/:id', (req, res) => {
+    res.sendFile(__dirname + '/views/index.html');
+});
+
 const singleUpload = upload.single('image');
 
 app.post('/image-upload/:id', (req, res) => {

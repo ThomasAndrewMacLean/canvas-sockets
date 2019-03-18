@@ -15,19 +15,19 @@
 <body>
     <div id="photo">
         <h1>Socket.IO?!!?</h1>
-        <canvas></canvas>
+        <canvas id="canvas"></canvas>
+        <img id="image" src="" alt="" id="image" />
         <form id="form-file" action="">
             <input type="file" name="image" id="imgupload" />
-            <button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">
+            <label for="imgupload" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">
                 PHOTO
-            </button>
+                <i class="material-icons">
+                    camera
+                </i>
+            </label>
         </form>
-        <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-            <i class="material-icons">
-                camera
-            </i>
-        </button>
-        <img src="" alt="" id="image" />
+        <!-- <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+        </button> -->
     </div>
     <div id="chat">
         <ul id="messages"></ul>
@@ -42,73 +42,7 @@
         </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-
-    <!-- <video autoplay></video> -->
-
-    <script>
-        // const constraints = {
-        //     video: true
-        // };
-
-        // const video = document.querySelector('video');
-
-        // navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-        //     video.srcObject = stream;
-        // });
-    </script>
-    <!-- <input type="file" accept="image/*" /> -->
-    <script>
-        (function () {
-            console.log('STARTING');
-            var socket = io();
-
-            const form = document.getElementById('form');
-            form.addEventListener('submit', e => {
-                e.preventDefault(); // prevents page reloading
-                const field = form.elements[0];
-                socket.emit('chat message', field.value);
-                field.value = '';
-                return false;
-            });
-
-            const formfile = document.getElementById('form-file');
-
-            const url = window.location.origin + '/image-upload' + window.location.pathname;
-
-            // formData.append('username', 'abc123');
-
-            formfile.addEventListener('submit', e => {
-                e.preventDefault();
-                console.log(fileField);
-
-                var formData = new FormData();
-                var fileField = document.getElementById('imgupload');
-                formData.append('image', fileField.files[0]);
-                const x = fetch(url, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .catch(error => console.error('Error:', error))
-                    .then(response =>
-                        console.log('Success:', JSON.stringify(response))
-                    );
-            });
-
-            socket.on('chat message', function (msg) {
-                const li = document.createElement('li');
-                li.textContent = msg;
-                const ul = document.getElementById('messages');
-                ul.appendChild(li);
-            });
-
-            socket.on('imageUrl', function (imageUrl) {
-
-                const image = document.getElementById('image');
-                image.src = imageUrl;
-            });
-        })();
-    </script>
+        <script src="krswrdrsl.js"></script>
 </body>
 
 </html>

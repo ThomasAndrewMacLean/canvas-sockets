@@ -11,6 +11,20 @@
     float: left;
 }
 
+#imgupload{
+    display: none;
+}
+
+#image{
+    width: 100%;
+    outline: 1px solid grey;
+}
+
+#canvas{
+    outline: 1px solid green;
+    width: 100%;
+}
+
 #chat {
     background: lightblue;
     height: 100%;

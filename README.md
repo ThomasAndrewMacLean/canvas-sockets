@@ -59,18 +59,18 @@ https://stackoverflow.com/questions/2434458/image-resizing-client-side-with-java
 - [ ] set typescript for client side js
 - [ ] style krswrdrsl page (background image if no photo)
 - [ ] whatsapp share button (header image...)
-- [ ] set name to chat (home page, save local storage) and colour 
-- [ ] create random id as slug and navigate to that page (create endpoint? get randow uuid?)
+- [x] set name to chat (home page, save local storage) and colour 
+- [x] create random id as slug and navigate to that page (create endpoint? get random uuid?)
 - [ ] create save kruiswoordpage button, and list these on start page
 - [x] save pic under id
 - [ ] add timestamp to saves + user to chats
 - [ ] save chats
 - [ ] resize picture 
-- [ ] set button to upload pic and listend to onchange event
+- [x] set button to upload pic and listend to onchange event
 - [ ] load pics and chats on pageload (by slugID)
 - [ ] css up the chats, and scroll
 - [ ] rotate pic
-- [ ] create canvas
+- [x] create canvas
 - [ ] send data on mouse down over socket
 - [ ] draw on all canvases
 - [ ] remove after x seconds
