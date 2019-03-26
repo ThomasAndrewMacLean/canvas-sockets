@@ -2,8 +2,8 @@
     "name": "canvas-sockets",
     "alias": "canvas-sockets",
     "env": {
-        "TEST": "@canvasTest",
-        "SECRET_ACCESS_KEY": "@canvasSECRET_ACCESS_KEY",
-        "ACCESS_KEY_ID": "@canvasACCESS_KEY_ID"
+        "TEST": "@canvastest",
+        "SECRET_ACCESS_KEY": "@canvassecret_access_key",
+        "ACCESS_KEY_ID": "@canvasaccess_key_id"
     }
 }
