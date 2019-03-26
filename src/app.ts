@@ -36,7 +36,6 @@ const upload = multer({
     }),
 });
 
-
 const saveItem = (imageUrl: string, slug: string) => {
     const params = {
         Item: {
@@ -58,13 +57,13 @@ const saveItem = (imageUrl: string, slug: string) => {
 // module.exports = upload;
 app.use(express.static('src/public'));
 
-app.post('/testing', (req, res )=> {
-    return res.status(200).json(process.env.TEST)
-})
+app.post('/testing', (req, res) => {
+    return res.status(200).json(process.env.ACCESS_KEY_ID);
+});
 
-app.get('/uuid', (req,res)=> {
-    return res.status(200).json(uuidv4())
-})
+app.get('/uuid', (req, res) => {
+    return res.status(200).json(uuidv4());
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/start.html');
