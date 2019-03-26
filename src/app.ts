@@ -1,5 +1,5 @@
 // tslint:disable-next-line:no-var-requires
-require('dotenv').config();
+// require('dotenv').config();
 import express = require('express');
 import socket = require('socket.io');
 const app = express();
