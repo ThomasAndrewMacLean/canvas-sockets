@@ -58,7 +58,7 @@ const saveItem = (imageUrl: string, slug: string) => {
 app.use(express.static('src/public'));
 
 app.post('/testing', (req, res) => {
-    return res.status(200).json(process.env.SECRET_ACCESS_KEY);
+    return res.status(200).json(process.env.TEST);
 });
 
 app.get('/uuid', (req, res) => {
