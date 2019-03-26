@@ -17,6 +17,7 @@ const s3 = new aws.S3();
 const dynamodb = new aws.DynamoDB();
 
 const xxx = process.env.TES;
+console.log(process.env.ACCESS_KEY_ID);
 
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
