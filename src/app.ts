@@ -19,7 +19,7 @@ const dynamodb = new aws.DynamoDB();
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     region: 'eu-west-1',
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY
 });
 
 const upload = multer({
@@ -32,8 +32,8 @@ const upload = multer({
         key(req: any, file: any, cb: any) {
             cb(null, Date.now().toString());
         },
-        s3,
-    }),
+        s3
+    })
 });
 
 const saveItem = (imageUrl: string, slug: string) => {
@@ -41,9 +41,9 @@ const saveItem = (imageUrl: string, slug: string) => {
         Item: {
             id: { S: uuidv4() },
             imageUrl: { S: imageUrl },
-            slug: { S: slug },
+            slug: { S: slug }
         },
-        TableName: 'canvas-sockets',
+        TableName: 'canvas-sockets'
     };
 
     dynamodb.putItem(params, (err: AWSError, data) => {
@@ -58,7 +58,7 @@ const saveItem = (imageUrl: string, slug: string) => {
 app.use(express.static('src/public'));
 
 app.post('/testing', (req, res) => {
-    return res.status(200).json(process.env.TEST);
+    return res.status(200).json(process.env.ACCESS_KEY_ID);
 });
 
 app.get('/uuid', (req, res) => {
@@ -79,7 +79,7 @@ app.post('/image-upload/:id', (req, res) => {
     singleUpload(req, res, (err: any) => {
         if (err) {
             return res.status(422).send({
-                errors: [{ title: 'Image Upload Error', detail: err.message }],
+                errors: [{ title: 'Image Upload Error', detail: err.message }]
             });
         }
         // @ts-ignore
