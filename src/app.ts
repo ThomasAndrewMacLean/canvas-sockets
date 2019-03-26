@@ -16,6 +16,8 @@ import uuidv4 = require('uuid/v4');
 const s3 = new aws.S3();
 const dynamodb = new aws.DynamoDB();
 
+const xxx = process.env.TES;
+
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     region: 'eu-west-1',
@@ -58,7 +60,7 @@ const saveItem = (imageUrl: string, slug: string) => {
 app.use(express.static('src/public'));
 
 app.post('/testing', (req, res) => {
-    return res.status(200).json(process.env.TES);
+    return res.status(200).json(xxx);
 });
 
 app.get('/uuid', (req, res) => {
