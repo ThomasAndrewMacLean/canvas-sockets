@@ -16,7 +16,7 @@ import uuidv4 = require('uuid/v4');
 const s3 = new aws.S3();
 const dynamodb = new aws.DynamoDB();
 
-const xxx = process.env.TES;
+const xxx = process.env.ACCESS_KEY_ID;
 console.log(process.env.TES);
 
 aws.config.update({
