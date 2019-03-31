@@ -12,6 +12,12 @@ import { AWSError } from 'aws-sdk';
 import multer = require('multer');
 import multerS3 = require('multer-s3');
 
+aws.config.update({
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    region: 'eu-west-1',
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+});
+
 import uuidv4 = require('uuid/v4');
 const s3 = new aws.S3();
 const dynamodb = new aws.DynamoDB();
@@ -19,11 +25,6 @@ const dynamodb = new aws.DynamoDB();
 const xxx = process.env.ACCESS_KEY_ID;
 console.log(process.env.ACCESS_KEY_ID);
 
-aws.config.update({
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    region: 'eu-west-1',
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-});
 
 const upload = multer({
     storage: multerS3({
@@ -53,7 +54,7 @@ const saveItem = (imageUrl: string, slug: string) => {
         if (err) {
             console.log(err);
         }
-        console.log(data);
+        console.log('data', data);
     });
 };
 
