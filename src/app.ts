@@ -15,7 +15,7 @@ import multerS3 = require('multer-s3');
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     region: 'eu-west-1',
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY
 });
 
 import uuidv4 = require('uuid/v4');
@@ -24,7 +24,6 @@ const dynamodb = new aws.DynamoDB();
 
 const xxx = process.env.ACCESS_KEY_ID;
 console.log(process.env.ACCESS_KEY_ID);
-
 
 const upload = multer({
     storage: multerS3({
@@ -36,18 +35,44 @@ const upload = multer({
         key(req: any, file: any, cb: any) {
             cb(null, Date.now().toString());
         },
-        s3,
-    }),
+        s3
+    })
 });
 
-const saveItem = (imageUrl: string, slug: string) => {
+const saveItem = (imageUrl: string, slug: string, dataType: string) => {
     const params = {
         Item: {
+            dataType: { S: dataType },
             id: { S: uuidv4() },
             imageUrl: { S: imageUrl },
-            slug: { S: slug },
+            slug: { S: slug }
         },
-        TableName: 'canvas-sockets',
+        TableName: 'canvas-sockets'
+    };
+
+    dynamodb.putItem(params, (err: AWSError, data) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('data', data);
+    });
+};
+
+const saveMessage = (
+    username: string,
+    message: string,
+    slug: string,
+    dataType: string
+) => {
+    const params = {
+        Item: {
+            dataType: { S: dataType },
+            id: { S: uuidv4() },
+            message: { S: message },
+            slug: { S: slug },
+            username: { S: username }
+        },
+        TableName: 'canvas-sockets'
     };
 
     dynamodb.putItem(params, (err: AWSError, data) => {
@@ -60,10 +85,6 @@ const saveItem = (imageUrl: string, slug: string) => {
 
 // module.exports = upload;
 app.use(express.static('src/public'));
-
-app.post('/testing', (req, res) => {
-    return res.status(200).json(xxx);
-});
 
 app.get('/uuid', (req, res) => {
     return res.status(200).json(uuidv4());
@@ -83,7 +104,7 @@ app.post('/image-upload/:id', (req, res) => {
     singleUpload(req, res, (err: any) => {
         if (err) {
             return res.status(422).send({
-                errors: [{ title: 'Image Upload Error', detail: err.message }],
+                errors: [{ title: 'Image Upload Error', detail: err.message }]
             });
         }
         // @ts-ignore
@@ -91,22 +112,22 @@ app.post('/image-upload/:id', (req, res) => {
 
         io.emit('imageUrl', imageUrl);
 
-        saveItem(imageUrl, req.params.id);
+        saveItem(imageUrl, req.params.id, 'imageURL');
         return res.json({ imageUrl });
     });
 });
 
-app.post('/test/:id', (req, res) => {
-    io.emit('chat message', req.params.id);
-    return res.json({ test: req.params.id });
-});
 io.on('connection', (socketIO: any) => {
     console.log('a user connected', socketIO.id);
 
-    socketIO.on('chat message', (msg: any) => {
-        console.log('message: ' + msg);
-        io.emit('chat message', msg);
-    });
+    socketIO.on(
+        'chat message',
+        (msg: { msg: string; username: string; id: string }) => {
+            console.log('message: ' + msg.msg + ', username: ' + msg.username);
+            saveMessage(msg.username, msg.msg, msg.id, 'message');
+            io.emit('chat message', msg);
+        }
+    );
 
     socketIO.on('disconnect', () => {
         console.log('user disconnected', socketIO.id);

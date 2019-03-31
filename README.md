@@ -64,7 +64,7 @@ https://stackoverflow.com/questions/2434458/image-resizing-client-side-with-java
 - [ ] create save kruiswoordpage button, and list these on start page
 - [x] save pic under id
 - [ ] add timestamp to saves + user to chats
-- [ ] save chats
+- [x] save chats
 - [ ] resize picture 
 - [x] set button to upload pic and listend to onchange event
 - [ ] load pics and chats on pageload (by slugID)
