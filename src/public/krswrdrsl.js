@@ -12,14 +12,13 @@ const form = document.getElementById('form');
 form.addEventListener('submit', e => {
     e.preventDefault(); // prevents page reloading
     const field = form.elements[0];
-    socket.emit('chat message', { msg: field.value, username, id:  window.location.pathname});
+    socket.emit('chat message', {
+        msg: field.value,
+        username,
+        id: window.location.pathname.replace('/', '')
+    });
     field.value = '';
     return false;
-});
-const canvas = document.getElementById('canvas');
-canvas.addEventListener('mousedown', e => {
-    console.log(e);
-    socket.emit('canvas-mouse', { x: e.offsetX, y: e.offsetY });
 });
 
 const formfile = document.getElementById('form-file');
@@ -55,4 +54,32 @@ socket.on('chat message', function(msg) {
 socket.on('imageUrl', function(imageUrl) {
     const image = document.getElementById('image');
     image.src = imageUrl;
+});
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// canvas.addEventListener('mousedown', e => {
+//     console.log(e);
+//     socket.emit('canvas-mouse', { x: e.offsetX, y: e.offsetY });
+// });
+
+var mouseDown = 0;
+document.body.onmousedown = function() {
+    mouseDown = 1;
+};
+document.body.onmouseup = function() {
+    mouseDown = 0;
+};
+
+document.addEventListener('mousemove', onMouseMove, false);
+
+function onMouseMove(e) {
+    if (mouseDown) {
+        socket.emit('canvas-mouse', { x: e.offsetX, y: e.offsetY });
+    }
+}
+socket.on('draw', data => {
+    console.log(data);
+    ctx.fillRect(data.x, data.y, 3, 3);
 });

@@ -15,7 +15,7 @@ import multerS3 = require('multer-s3');
 aws.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     region: 'eu-west-1',
-    secretAccessKey: process.env.SECRET_ACCESS_KEY
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
 });
 
 import uuidv4 = require('uuid/v4');
@@ -35,8 +35,8 @@ const upload = multer({
         key(req: any, file: any, cb: any) {
             cb(null, Date.now().toString());
         },
-        s3
-    })
+        s3,
+    }),
 });
 
 const saveItem = (imageUrl: string, slug: string, dataType: string) => {
@@ -45,9 +45,9 @@ const saveItem = (imageUrl: string, slug: string, dataType: string) => {
             dataType: { S: dataType },
             id: { S: uuidv4() },
             imageUrl: { S: imageUrl },
-            slug: { S: slug }
+            slug: { S: slug },
         },
-        TableName: 'canvas-sockets'
+        TableName: 'canvas-sockets',
     };
 
     dynamodb.putItem(params, (err: AWSError, data) => {
@@ -62,7 +62,7 @@ const saveMessage = (
     username: string,
     message: string,
     slug: string,
-    dataType: string
+    dataType: string,
 ) => {
     const params = {
         Item: {
@@ -70,9 +70,9 @@ const saveMessage = (
             id: { S: uuidv4() },
             message: { S: message },
             slug: { S: slug },
-            username: { S: username }
+            username: { S: username },
         },
-        TableName: 'canvas-sockets'
+        TableName: 'canvas-sockets',
     };
 
     dynamodb.putItem(params, (err: AWSError, data) => {
@@ -104,7 +104,7 @@ app.post('/image-upload/:id', (req, res) => {
     singleUpload(req, res, (err: any) => {
         if (err) {
             return res.status(422).send({
-                errors: [{ title: 'Image Upload Error', detail: err.message }]
+                errors: [{ title: 'Image Upload Error', detail: err.message }],
             });
         }
         // @ts-ignore
@@ -126,8 +126,12 @@ io.on('connection', (socketIO: any) => {
             console.log('message: ' + msg.msg + ', username: ' + msg.username);
             saveMessage(msg.username, msg.msg, msg.id, 'message');
             io.emit('chat message', msg);
-        }
+        },
     );
+
+    socketIO.on('canvas-mouse', (data: { x: number; y: number }) => {
+        io.emit('draw', { x: data.x, y: data.y });
+    });
 
     socketIO.on('disconnect', () => {
         console.log('user disconnected', socketIO.id);
