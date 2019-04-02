@@ -64,6 +64,14 @@ const ctx = canvas.getContext('2d');
 //     socket.emit('canvas-mouse', { x: e.offsetX, y: e.offsetY });
 // });
 
+document.getElementById('save-btn').addEventListener('click', () => {
+    socket.emit('saveURL', {
+        username,
+        slug: window.location.pathname.replace('/', '')
+    });
+});
+
+//TODO: this should be done better...
 var mouseDown = 0;
 document.body.onmousedown = function() {
     mouseDown = 1;
@@ -80,6 +88,5 @@ function onMouseMove(e) {
     }
 }
 socket.on('draw', data => {
-    console.log(data);
     ctx.fillRect(data.x, data.y, 3, 3);
 });

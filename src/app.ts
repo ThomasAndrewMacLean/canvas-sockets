@@ -83,6 +83,25 @@ const saveMessage = (
     });
 };
 
+const saveSlug = (username: string, dataType: string, slug: string) => {
+    const params = {
+        Item: {
+            dataType: { S: dataType },
+            id: { S: slug },
+            slug: { S: slug },
+            username: { S: username },
+        },
+        TableName: 'canvas-sockets',
+    };
+
+    dynamodb.putItem(params, (err: AWSError, data) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('data', data);
+    });
+};
+
 // module.exports = upload;
 app.use(express.static('src/public'));
 
@@ -91,7 +110,20 @@ app.get('/uuid', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/start.html');
+    const params = {
+        // Key: {
+        //     id: 'saveURL',
+        // },
+        TableName: 'canvas-sockets',
+    };
+    dynamodb.scan(params, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(data);
+            return res.sendFile(__dirname + '/views/start.html');
+        }
+    });
 });
 
 app.get('/:id', (req, res) => {
@@ -135,6 +167,10 @@ io.on('connection', (socketIO: any) => {
 
     socketIO.on('disconnect', () => {
         console.log('user disconnected', socketIO.id);
+    });
+    socketIO.on('saveURL', (data: { username: string; slug: string }) => {
+        console.log('saveURL', data.slug);
+        saveSlug(data.username, 'saveURL', data.slug);
     });
 });
 http.listen(3000, () => {
