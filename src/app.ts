@@ -1,8 +1,12 @@
 // tslint:disable-next-line:no-var-requires
 // require('dotenv').config();
 import express = require('express');
+import path = require('path');
 import socket = require('socket.io');
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
 // tslint:disable-next-line:no-var-requires
 const http = require('http').Server(app);
 const io = socket(http);
@@ -111,23 +115,45 @@ app.get('/uuid', (req, res) => {
 
 app.get('/', (req, res) => {
     const params = {
-        // Key: {
-        //     id: 'saveURL',
-        // },
         TableName: 'canvas-sockets',
     };
     dynamodb.scan(params, (err, data) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(data);
-            return res.sendFile(__dirname + '/views/start.html');
+            return res.render('start', {
+                savedLinks:
+                    data.Items &&
+                    data.Items.filter(
+                        (d) => d.dataType && d.dataType.S === 'saveURL',
+                    ),
+            });
         }
     });
 });
 
 app.get('/:id', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    //  res.sendFile(__dirname + '/views/index.html');
+    const params = {
+        TableName: 'canvas-sockets',
+    };
+    dynamodb.scan(params, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            const dataForPage =
+                data.Items &&
+                data.Items.filter((d) => d.slug && d.slug.S === req.params.id);
+            return res.render('game', {
+                chats:
+                    dataForPage &&
+                    dataForPage.filter((d) => d.dataType.S === 'message'),
+                image:
+                    dataForPage &&
+                    dataForPage.find((d) => d.dataType.S === 'imageURL'),
+            });
+        }
+    });
 });
 
 const singleUpload = upload.single('image');

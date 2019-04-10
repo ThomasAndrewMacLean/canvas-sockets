@@ -15,10 +15,15 @@
 <body>
     <h1>Socket IO</h1>
 
-    <a href="#" id="startBtn" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">
+    <a href="#" id="startBtn"
+        class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">
         Start
     </a>
-
+    <ul>
+        <% savedLinks.forEach(function(link) { %>
+        <li><a href="<%= link.slug.S %>"> <%= link.slug.S %> - <%= link.username.S %></a></li>
+        <% }); %>
+    </ul>
     <script src="client.js"></script>
 </body>
 
