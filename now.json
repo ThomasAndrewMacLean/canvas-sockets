@@ -1,8 +1,9 @@
 {
+    "version": 1,
     "name": "canvas-sockets",
     "alias": "canvas-sockets",
-    "env":{
-        "SECRET_ACCESS_KEY" : "@canvassecret_access_key",
+    "env": {
+        "SECRET_ACCESS_KEY": "@canvassecret_access_key",
         "ACCESS_KEY_ID": "@canvasaccess_key_id",
         "TES": "31456"
     }
