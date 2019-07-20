@@ -67,6 +67,7 @@ const saveMessage = (
     message: string,
     slug: string,
     dataType: string,
+    timestamp: number,
 ) => {
     const params = {
         Item: {
@@ -74,6 +75,7 @@ const saveMessage = (
             id: { S: uuidv4() },
             message: { S: message },
             slug: { S: slug },
+            timestamp: { N: timestamp },
             username: { S: username },
         },
         TableName: 'canvas-sockets',
@@ -182,7 +184,7 @@ io.on('connection', (socketIO: any) => {
         'chat message',
         (msg: { msg: string; username: string; id: string }) => {
             console.log('message: ' + msg.msg + ', username: ' + msg.username);
-            saveMessage(msg.username, msg.msg, msg.id, 'message');
+            saveMessage(msg.username, msg.msg, msg.id, 'message', Date.now());
             io.emit('chat message', msg);
         },
     );
